@@ -1,69 +1,99 @@
-import Image from "next/image";
+import Header from '@/components/Header';
+import PassosServico from '@/components/PassosServico';
+import Servicos3D from '@/components/Servicos3D';
+import Link from 'next/link';
 
-export default function Home() {
+const PRODUTOS_EXEMPLO = [
+  { 
+    id: '1', 
+    nome: 'Polvo 3D Pernas Articuladas', 
+    preco: '1,99 €', 
+    categoria: 'Brinquedos', 
+    imagem: 'images/polvo2.jpeg' 
+  },
+  {                               
+    id: '2', 
+    nome: 'Vaso Decorativo Geométrico', 
+    preco: '89,90 €', 
+    categoria: 'Decoração', 
+    imagem: 'images/vaso3.jpeg' 
+  },
+  { 
+    id: '3', 
+    nome: 'Coruja Decorativo Minimalista', 
+    preco: '69,99 €', 
+    categoria: 'Decoração', 
+    imagem: 'images/Coruja3.jpeg' 
+  },
+];
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-zinc-50 text-zinc-900">
+      <Header />
+      
+      <main className="mx-auto max-w-7xl px-6 py-12">
+        {/* Banner Hero */}
+        <div className="relative overflow-hidden rounded-3xl bg-zinc-900 p-8 text-white md:p-12">
+          <div className="max-w-xl">
+            <span className="rounded-full bg-lime-400 px-3 py-1 text-xs font-bold text-zinc-900 uppercase">
+              Serviço Exclusivo
+            </span>
+            <h1 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
+              Não encontras o que procuras?
+            </h1>
+            <p className="mt-4 text-zinc-400">
+              Nós procuramos e encomendamos qualquer artigo por ti. Envia-nos os detalhes do produto que queres.
+            </p>
+            <div className="mt-6">
+              <Link
+                href="/pedir"
+                className="inline-block rounded-xl bg-lime-400 px-6 py-3 font-bold text-zinc-900 transition hover:bg-lime-300"
+              >
+                Fazer Pedido Customizado
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+
+        {/* Grelha de Produtos */}
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold tracking-tight">Produtos em Destaque</h2>
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {PRODUTOS_EXEMPLO.map((produto) => (
+              <Link
+                key={produto.id}
+                href={`/produto/${produto.id}`}
+                className="group block overflow-hidden rounded-2xl border bg-white p-4 transition hover:shadow-lg"
+              >
+                <div className="aspect-square w-full overflow-hidden rounded-xl bg-zinc-100">
+                  <img
+                    src={produto.imagem}
+                    alt={produto.nome}
+                    className="h-full w-full object-cover transition group-hover:scale-105"
+                  />
+                </div>
+                <div className="mt-4 flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-semibold text-zinc-400 uppercase">{produto.categoria}</p>
+                    <h3 className="font-bold text-zinc-900">{produto.nome}</h3>
+                  </div>
+                  <span className="font-extrabold text-zinc-900">{produto.preco}</span>
+                </div>
+                <div className="mt-4 w-full text-center rounded-xl bg-zinc-100 py-2.5 text-sm font-bold text-zinc-900 transition group-hover:bg-zinc-900 group-hover:text-white">
+                  Ver Detalhes
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
       </main>
+
+      {/* Secção de Como Funciona */}
+      <PassosServico />
+
+      {/* Secção do Acordeão de Impressão 3D */}
+      <Servicos3D />
     </div>
   );
 }
