@@ -38,7 +38,7 @@ function FormularioPedidoContent() {
     };
 
     try {
-      const response = await fetch('/api/enviar-email', {
+      const response = await fetch('/api/mail_sender', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dadosPedido),
