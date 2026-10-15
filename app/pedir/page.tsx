@@ -1,14 +1,11 @@
 'use client';
 
 import { Suspense, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Header from '@/components/Header';
-import { useCart } from '@/components/CartContent';
 
 function FormularioPedidoContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const { addToCart } = useCart();
 
   const produtoUrl = searchParams.get('produto') || '';
   const corUrl = searchParams.get('cor') || '';
@@ -20,11 +17,16 @@ function FormularioPedidoContent() {
   const [descricao, setDescricao] = useState(corUrl ? `Cor pretendida: ${corUrl}` : '');
   const [nomeCliente, setNomeCliente] = useState('');
   const [emailCliente, setEmailCliente] = useState('');
+  const [telemovelCliente, setTelemovelCliente] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [enviadoComSucesso, setEnviadoComSucesso] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    addToCart({
+    const dadosPedido = {
       nomeProduto,
       linkProduto,
       quantidade,
@@ -32,10 +34,58 @@ function FormularioPedidoContent() {
       descricao,
       nomeCliente,
       emailCliente,
-    });
+      telemovelCliente,
+    };
 
-    router.push('/carrinho');
+    try {
+      const response = await fetch('/api/enviar-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dadosPedido),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao enviar o email.');
+      }
+
+      setEnviadoComSucesso(true);
+    } catch (error) {
+      alert('Ocorreu um erro ao submeter o pedido. Por favor, tenta novamente.');
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (enviadoComSucesso) {
+    return (
+      <div className="py-12 text-center space-y-4">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600 text-2xl font-bold">
+          ✓
+        </div>
+        <h2 className="text-2xl font-bold text-zinc-900">Pedido Enviado com Sucesso!</h2>
+        <p className="text-sm text-zinc-600 max-w-md mx-auto">
+          Obrigado, <span className="font-semibold">{nomeCliente}</span>. Recebemos o teu pedido customizado e o atelier entrará em contacto contigo em breve através do email fornecido.
+        </p>
+        <button
+          onClick={() => {
+            setEnviadoComSucesso(false);
+            setNomeProduto('');
+            setLinkProduto('');
+            setQuantidade(1);
+            setOrcamento('');
+            setDescricao('');
+            setNomeCliente('');
+            setEmailCliente('');
+            setTelemovelCliente('');
+          }}
+          className="mt-6 inline-block rounded-xl bg-zinc-900 px-6 py-3 text-sm font-bold text-white transition hover:bg-zinc-800"
+        >
+          Fazer Novo Pedido
+        </button>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="mt-8 space-y-6">
@@ -121,14 +171,26 @@ function FormularioPedidoContent() {
               className="mt-2 w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm outline-none focus:border-zinc-900"
             />
           </div>
+          <div>
+            <label className="block text-sm font-semibold">Número de Telemóvel *</label>
+            <input
+              type="tel"
+              required
+              value={telemovelCliente}
+              onChange={(e) => setTelemovelCliente(e.target.value)}
+              placeholder="912 345 678"
+              className="mt-2 w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm outline-none focus:border-zinc-900"
+            />
+          </div>
         </div>
       </div>
 
       <button
         type="submit"
-        className="w-full rounded-xl bg-zinc-900 py-4 font-bold text-white transition hover:bg-zinc-800"
+        disabled={isSubmitting}
+        className="w-full rounded-xl bg-zinc-900 py-4 font-bold text-white transition hover:bg-zinc-800 disabled:opacity-50"
       >
-        Adicionar ao Carrinho
+        {isSubmitting ? 'A enviar pedido...' : 'Enviar Pedido ao Atelier'}
       </button>
     </form>
   );
@@ -141,9 +203,9 @@ export default function PedirPage() {
 
       <main className="mx-auto max-w-2xl px-6 py-12">
         <div className="rounded-3xl border bg-white p-8 shadow-sm">
-          <h1 className="text-3xl font-black tracking-tight">Pedir um Produto</h1>
+          <h1 className="text-3xl font-black tracking-tight">Pedir um Produto Personalizado</h1>
           <p className="mt-2 text-sm text-zinc-500">
-            Preenche os dados do artigo que procuras. Responderemos com uma proposta e orçamento.
+            Preenche os dados do artigo que procuras. O atelier responderá por email com uma proposta e orçamento.
           </p>
 
           <Suspense fallback={<div className="py-8 text-center text-sm text-zinc-400">A carregar formulário...</div>}>
