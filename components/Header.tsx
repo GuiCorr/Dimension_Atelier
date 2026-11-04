@@ -84,12 +84,21 @@ export default function Header() {
             />
           </Link>
 
-          {/* Link: Portfólio */}
+          {/* Link: Portfólio (Atualizado para a nova rota /portfolio) */}
           <Link
-            href="/#portifolio"
-            className="relative py-1 font-medium text-zinc-500 transition-all duration-300 ease-in-out hover:text-zinc-900"
+            href="/portfolio"
+            className={`relative py-1 transition-all duration-300 ease-in-out ${
+              isActive('/portfolio') 
+                ? 'font-bold text-base text-zinc-900 scale-105' 
+                : 'font-medium text-zinc-500 hover:text-zinc-900'
+            }`}
           >
             Portfólio
+            <span
+              className={`absolute bottom-0 left-0 h-[2px] w-full bg-zinc-900 transition-all duration-300 ease-in-out ${
+                isActive('/portfolio') ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'
+              }`}
+            />
           </Link>
 
         </nav>
