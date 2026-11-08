@@ -84,7 +84,7 @@ export default function Header() {
             />
           </Link>
 
-          {/* Link: Portfólio (Atualizado para a nova rota /portfolio) */}
+          {/* Link: Portfólio */}
           <Link
             href="/portfolio"
             className={`relative py-1 transition-all duration-300 ease-in-out ${
@@ -114,10 +114,21 @@ export default function Header() {
             <Search size={20} strokeWidth={1.5} />
           </button>
 
-          {/* Conta */}
+          {/* Conta / Admin (Com verificação de sessão via cookie) */}
           <button
+            onClick={() => {
+              const hasSession = document.cookie
+                .split('; ')
+                .find((row) => row.startsWith('atelier_session='));
+
+              if (hasSession) {
+                window.location.href = '/atelier-gestao/painel';
+              } else {
+                window.location.href = '/atelier-gestao/acesso';
+              }
+            }}
             aria-label="Conta"
-            className="transition-transform duration-200 hover:scale-110 hover:opacity-80 active:scale-95"
+            className="transition-transform duration-200 hover:scale-110 hover:opacity-80 active:scale-95 cursor-pointer"
           >
             <UserRound size={20} strokeWidth={1.5} />
           </button>
