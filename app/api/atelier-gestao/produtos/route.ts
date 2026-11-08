@@ -1,38 +1,37 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { supabase } from '@/lib/supabase';
 
-// GET: Lista todos os produtos do Supabase (Público)
+// Palavra-passe de admin definida nas variáveis de ambiente da Vercel (ou fallback para teste)
+const ADMIN_SECRET = process.env.ADMIN_SECRET || 'atelier2026';
+
+// GET: Lista todos os produtos (Público)
 export async function GET() {
   try {
     const { data, error } = await supabase.from('produtos').select('*');
 
     if (error) {
-      console.error('Erro ao buscar produtos no Supabase:', error);
+      console.error('Erro ao buscar produtos:', error);
       return NextResponse.json({ error: 'Erro ao buscar produtos' }, { status: 500 });
     }
 
     return NextResponse.json(data || []);
   } catch (error) {
-    console.error('Erro interno na rota GET:', error);
-    return NextResponse.json({ error: 'Erro interno no servidor' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
 
-// POST: Adiciona um novo produto (Protegido por cookie de administrador)
+// POST: Adiciona um novo produto
 export async function POST(request: Request) {
   try {
-    const cookieStore = await cookies();
-    const session = cookieStore.get('atelier_session');
+    const authHeader = request.headers.get('x-admin-secret');
 
-    // Validação de sessão do administrador
-    if (!session || session.value !== 'true') {
-      return NextResponse.json({ error: 'Não autorizado. Sessão inválida ou expirada.' }, { status: 401 });
+    // Validação simples por palavra-passe/token no cabeçalho
+    if (authHeader !== ADMIN_SECRET) {
+      return NextResponse.json({ error: 'Não autorizado. Chave de admin inválida.' }, { status: 401 });
     }
 
     const body = await request.json();
 
-    // Validação básica dos campos obrigatórios
     if (!body.nome || !body.preco) {
       return NextResponse.json({ error: 'Nome e preço são obrigatórios' }, { status: 400 });
     }
@@ -43,7 +42,7 @@ export async function POST(request: Request) {
       preco: Number(body.preco),
       imagens: body.imagens || [],
       descricao: body.descricao || '',
-      cores: body.cores || [], // Suporta o modelo estruturado de cores (nome e código hex)
+      cores: body.cores || [],
     };
 
     const { data, error } = await supabase
@@ -53,26 +52,23 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
-      console.error('Erro ao inserir no Supabase:', error);
+      console.error('Erro no Supabase:', error);
       return NextResponse.json({ error: 'Erro ao guardar na base de dados: ' + error.message }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, produto: data });
   } catch (error: any) {
-    console.error('Erro interno na rota POST:', error);
-    return NextResponse.json({ error: 'Erro interno ao processar pedido: ' + error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Erro interno ao processar pedido' }, { status: 500 });
   }
 }
 
-// DELETE: Apaga um produto por ID (Protegido por cookie de administrador)
+// DELETE: Apaga um produto por ID
 export async function DELETE(request: Request) {
   try {
-    const cookieStore = await cookies();
-    const session = cookieStore.get('atelier_session');
+    const authHeader = request.headers.get('x-admin-secret');
 
-    // Validação de sessão do administrador
-    if (!session || session.value !== 'true') {
-      return NextResponse.json({ error: 'Não autorizado. Sessão inválida ou expirada.' }, { status: 401 });
+    if (authHeader !== ADMIN_SECRET) {
+      return NextResponse.json({ error: 'Não autorizado.' }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -88,13 +84,11 @@ export async function DELETE(request: Request) {
       .eq('id', id);
 
     if (error) {
-      console.error('Erro ao apagar no Supabase:', error);
       return NextResponse.json({ error: 'Erro ao apagar no Supabase' }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Erro interno na rota DELETE:', error);
     return NextResponse.json({ error: 'Erro ao apagar produto' }, { status: 500 });
   }
 }
