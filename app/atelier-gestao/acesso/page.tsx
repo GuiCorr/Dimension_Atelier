@@ -16,7 +16,7 @@ export default function LoginPage() {
     });
 
     if (res.ok) {
-      router.push('/atelier-gestao/painel'); // Vai para a página exclusiva de gestão
+      router.push('/'); // Vai para a página exclusiva de gestão
       router.refresh();
     } else {
       setErro('Palavra-passe incorreta. Tente novamente.');
