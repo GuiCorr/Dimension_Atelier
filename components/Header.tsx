@@ -106,14 +106,6 @@ export default function Header() {
         {/* ÍCONES À DIREITA */}
         <div className="ml-auto flex items-center gap-5">
 
-          {/* Pesquisa */}
-          <button
-            aria-label="Pesquisar"
-            className="transition-transform duration-200 hover:scale-110 hover:opacity-80 active:scale-95"
-          >
-            <Search size={20} strokeWidth={1.5} />
-          </button>
-
           {/* Conta / Admin (Com verificação de sessão via cookie) */}
           <button
             onClick={() => {
