@@ -53,7 +53,7 @@ export default function Header() {
 
           {/* Link: Produtos */}
           <Link
-            href="/#produtos"
+            href="/catalogo"
             className="relative py-1 font-medium text-zinc-500 transition-all duration-300 ease-in-out hover:text-zinc-900"
           >
             Produtos
