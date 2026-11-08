@@ -16,7 +16,7 @@ export default function LoginPage() {
     });
 
     if (res.ok) {
-      router.push('/'); // Vai para a página exclusiva de gestão
+      router.push('/atelier-gestao/produtos');
       router.refresh();
     } else {
       setErro('Palavra-passe incorreta. Tente novamente.');

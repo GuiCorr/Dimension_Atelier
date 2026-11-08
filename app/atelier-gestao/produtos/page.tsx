@@ -22,11 +22,10 @@ export default function GestaoProdutosPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-
   // Carregar produtos ao iniciar
   useEffect(() => {
     fetch('/api/atelier-gestao/produtos')
-      .then(res => {return res.json();})
+      .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setProdutos(data);
       })
@@ -38,17 +37,20 @@ export default function GestaoProdutosPage() {
     setLoading(true);
 
     // Converte as imagens separadas por vírgula ou quebra de linha num array
-    const imagensArray = imagensInput.split(/[\n,]+/).map(img => img.trim());
+    const imagensArray = imagensInput.split(/[\n,]+/).map(img => img.trim()).filter(Boolean);
+    
+    // Converte as cores inseridas numa string para um array limpo (ex: "Preto, Branco" -> ["Preto", "Branco"])
+    const coresArray = cores.split(',').map(c => c.trim()).filter(Boolean);
 
     const res = await fetch('/api/atelier-gestao/produtos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         nome,
-        preco,
+        preco: Number(preco),
         imagens: imagensArray,
         descricao,
-        cores,
+        cores: coresArray, // Enviado corretamente como array
       }),
     });
 
@@ -78,7 +80,7 @@ export default function GestaoProdutosPage() {
     if (res.ok) {
       setProdutos(produtos.filter(p => p.id !== id));
     } else {
-      alert('Erro ao apagar o produto.');
+      alert('Erro ao apagar o produto. Verifica a tua autenticação.');
     }
   };
 
@@ -94,7 +96,7 @@ export default function GestaoProdutosPage() {
           </div>
           <button
             onClick={() => router.push('/')}
-            className="rounded-xl border border-zinc-200 bg-white px-4 py-2 text-sm font-bold shadow-sm transition hover:bg-zinc-100"
+            className="rounded-xl border border-zinc-200 bg-white px-4 py-2 text-sm font-bold shadow-sm transition hover:bg-zinc-100 cursor-pointer"
           >
             Ver Site
           </button>
@@ -148,7 +150,7 @@ export default function GestaoProdutosPage() {
               type="text"
               value={cores}
               onChange={e => setCores(e.target.value)}
-              placeholder="Preto Mate, Branco Perola, Azul"
+              placeholder="Preto Mate, Branco Pérola, Azul"
               className="mt-2 w-full rounded-xl border border-zinc-200 px-4 py-3 text-sm outline-none focus:border-zinc-900"
             />
           </div>
@@ -168,7 +170,7 @@ export default function GestaoProdutosPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-zinc-900 py-4 font-bold text-white transition hover:bg-zinc-800 disabled:opacity-50"
+            className="w-full rounded-xl bg-zinc-900 py-4 font-bold text-white transition hover:bg-zinc-800 disabled:opacity-50 cursor-pointer"
           >
             {loading ? 'A guardar...' : 'Adicionar Produto ao Catálogo'}
           </button>
@@ -184,11 +186,11 @@ export default function GestaoProdutosPage() {
                 <div>
                   <h3 className="font-bold text-lg">{produto.nome}</h3>
                   <p className="text-sm font-semibold text-zinc-600">{produto.preco} €</p>
-                  <p className="text-xs text-zinc-400 mt-1">Cores: {produto.cores.join(', ') || 'Nenhuma'}</p>
+                  <p className="text-xs text-zinc-400 mt-1">Cores: {produto.cores?.join(', ') || 'Nenhuma'}</p>
                 </div>
                 <button
                   onClick={() => handleDelete(produto.id)}
-                  className="rounded-xl bg-red-50 px-4 py-2 text-sm font-bold text-red-600 transition hover:bg-red-100"
+                  className="rounded-xl bg-red-50 px-4 py-2 text-sm font-bold text-red-600 transition hover:bg-red-100 cursor-pointer"
                 >
                   Apagar
                 </button>
