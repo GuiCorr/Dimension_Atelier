@@ -8,21 +8,21 @@ const projetos = [
     id: 1,
     titulo: 'Suporte para Comando e Headset',
     categoria: 'Gaming / Organização',
-    imagem: '/images/Coruja1.jpeg',
+    imagem: 'public/images/Coruja1.jpeg',
     descricao: 'Impresso em PLA Preto fosco, alta resistência e design ergonómico.',
   },
-  {
+  {  
     id: 2,
     titulo: 'Vaso Geométrico Decorativo',
     categoria: 'Decoração',
-    imagem: '/images/polvo2.jpeg',
+    imagem: 'public/images/polvo2.jpeg',
     descricao: 'Impresso em modo vase-mode com transição de cor silk.',
   },
   {
     id: 3,
     titulo: 'Miniatura de Personagem Articulada',
     categoria: 'Colecionáveis',
-    imagem: '/images/vaso3.jpeg',
+    imagem: 'public/images/vaso3.jpeg',
     descricao: 'Impressão de alta precisão em resina / PLA detalhado.',
   },
 ];
