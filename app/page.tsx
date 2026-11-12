@@ -2,32 +2,12 @@ import Header from '@/components/Header';
 import PassosServico from '@/components/PassosServico';
 import Servicos3D from '@/components/Servicos3D';
 import Link from 'next/link';
-
-const PRODUTOS_EXEMPLO = [
-  { 
-    id: '1', 
-    nome: 'Polvo 3D Pernas Articuladas', 
-    preco: '1,99 €', 
-    categoria: 'Brinquedos', 
-    imagem: 'images/polvo2.jpeg' 
-  },
-  {                               
-    id: '2', 
-    nome: 'Vaso Decorativo Geométrico', 
-    preco: '89,90 €', 
-    categoria: 'Decoração', 
-    imagem: 'images/vaso3.jpeg' 
-  },
-  { 
-    id: '3', 
-    nome: 'Coruja Decorativo Minimalista', 
-    preco: '69,99 €', 
-    categoria: 'Decoração', 
-    imagem: 'images/Coruja3.jpeg' 
-  },
-];
+import { PRODUTOS } from '@/data/produtos';
 
 export default function HomePage() {
+  // Transforma o objeto PRODUTOS num array para podermos usar o .map()
+  const listaProdutos = Object.values(PRODUTOS);
+
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
       <Header />
@@ -60,7 +40,7 @@ export default function HomePage() {
         <section className="mt-16">
           <h2 className="text-2xl font-bold tracking-tight">Produtos em Destaque</h2>
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {PRODUTOS_EXEMPLO.map((produto) => (
+            {listaProdutos.map((produto) => (
               <Link
                 key={produto.id}
                 href={`/produto/${produto.id}`}
@@ -68,7 +48,7 @@ export default function HomePage() {
               >
                 <div className="aspect-square w-full overflow-hidden rounded-xl bg-zinc-100">
                   <img
-                    src={produto.imagem}
+                    src={produto.imagens[0]}
                     alt={produto.nome}
                     className="h-full w-full object-cover transition group-hover:scale-105"
                   />
@@ -89,10 +69,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* Secção de Como Funciona */}
       <PassosServico />
-
-      {/* Secção do Acordeão de Impressão 3D */}
       <Servicos3D />
     </div>
   );
