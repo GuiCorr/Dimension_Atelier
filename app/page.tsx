@@ -10,7 +10,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
-      <Header />
       
       <main className="mx-auto max-w-7xl px-6 py-12">
         {/* Banner Hero */}
@@ -67,9 +66,42 @@ export default function HomePage() {
             ))}
           </div>
         </section>
-      </main>
 
       <PassosServico />
+
+        {/* Grelha de Produtos */}
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold tracking-tight">Produtos em Destaque</h2>
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {listaProdutos.map((produto) => (
+              <Link
+                key={produto.id}
+                href={`/produto/${produto.id}`}
+                className="group block overflow-hidden rounded-2xl border bg-white p-4 transition hover:shadow-lg"
+              >
+                <div className="aspect-square w-full overflow-hidden rounded-xl bg-zinc-100">
+                  <img
+                    src={produto.imagens[0]}
+                    alt={produto.nome}
+                    className="h-full w-full object-cover transition group-hover:scale-105"
+                  />
+                </div>
+                <div className="mt-4 flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-semibold text-zinc-400 uppercase">{produto.categoria}</p>
+                    <h3 className="font-bold text-zinc-900">{produto.nome}</h3>
+                  </div>
+                  <span className="font-extrabold text-zinc-900">{produto.preco}</span>
+                </div>
+                <div className="mt-4 w-full text-center rounded-xl bg-zinc-100 py-2.5 text-sm font-bold text-zinc-900 transition group-hover:bg-zinc-900 group-hover:text-white">
+                  Ver Detalhes
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </main>
+
       <Servicos3D />
     </div>
   );
