@@ -2,7 +2,6 @@
 
 import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import Header from '@/components/Header';
 
 function FormularioPedidoContent() {
   const searchParams = useSearchParams();
@@ -199,7 +198,6 @@ function FormularioPedidoContent() {
 export default function PedirPage() {
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
-      <Header />
 
       <main className="mx-auto max-w-2xl px-6 py-12">
         <div className="rounded-3xl border bg-white p-8 shadow-sm">

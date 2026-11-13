@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, use } from 'react';
-import Header from '@/components/Header';
 import { PRODUTOS } from '@/data/produtos';
 import { useCart } from '@/components/CartContent';
 import { Minus, Plus } from 'lucide-react';
@@ -31,7 +30,6 @@ export default function ProdutoDetailPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
-      <Header />
 
       <main className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">

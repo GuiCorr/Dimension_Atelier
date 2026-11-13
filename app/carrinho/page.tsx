@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Header from '@/components/Header';
 import { useCart } from '@/components/CartContent';
 import { Trash2, ShoppingBag, ArrowRight, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
@@ -95,7 +94,6 @@ export default function CarrinhoPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
-      <Header />
 
       <main className="mx-auto max-w-6xl px-6 py-12">
         <h1 className="text-3xl font-black tracking-tight">O teu Carrinho</h1>
