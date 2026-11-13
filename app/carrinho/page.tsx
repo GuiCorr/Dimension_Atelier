@@ -70,7 +70,6 @@ export default function CarrinhoPage() {
   if (encomendaEnviada) {
     return (
       <div className="min-h-screen bg-zinc-50 text-zinc-900">
-        <Header />
         <main className="mx-auto max-w-2xl px-6 py-20">
           <div className="rounded-3xl border bg-white p-10 text-center shadow-sm space-y-5">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600">
