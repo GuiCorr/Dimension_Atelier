@@ -2,15 +2,32 @@
 
 import { useState, use } from 'react';
 import Header from '@/components/Header';
-import Link from 'next/link';
 import { PRODUTOS } from '@/data/produtos';
+import { useCart } from '@/components/CartContent';
+import { Minus, Plus } from 'lucide-react';
 
 export default function ProdutoDetailPage({ params }: { params: Promise<{ id: string }> | { id: string } }) {
   const resolvedParams = params instanceof Promise ? use(params) : params;
   const produto = PRODUTOS[resolvedParams.id] || PRODUTOS['1'];
 
+  const { addToCart } = useCart();
   const [imagemSelecionada, setImagemSelecionada] = useState(produto.imagens[0]);
   const [corSelecionada, setCorSelecionada] = useState(produto.cores[0].nome);
+  const [quantidade, setQuantidade] = useState(1);
+  const [adicionado, setAdicionado] = useState(false);
+
+  const handleAdicionarAoCarrinho = () => {
+    addToCart({
+      nomeProduto: `${produto.nome} (Cor: ${corSelecionada})`,
+      quantidade: quantidade,
+      descricao: `Preço unitário: ${produto.preco} | Categoria: ${produto.categoria}`,
+      nomeCliente: '',
+      emailCliente: '',
+    });
+
+    setAdicionado(true);
+    setTimeout(() => setAdicionado(false), 2000);
+  };
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900">
@@ -57,6 +74,7 @@ export default function ProdutoDetailPage({ params }: { params: Promise<{ id: st
                 {produto.descricao}
               </p>
 
+              {/* Cores */}
               <div className="mt-8">
                 <label className="block text-sm font-bold text-zinc-900">
                   Cor Selecionada: <span className="font-semibold text-zinc-500">{corSelecionada}</span>
@@ -75,15 +93,39 @@ export default function ProdutoDetailPage({ params }: { params: Promise<{ id: st
                   ))}
                 </div>
               </div>
+
+              {/* Quantidade */}
+              <div className="mt-8">
+                <label className="block text-sm font-bold text-zinc-900">Quantidade</label>
+                <div className="mt-3 flex items-center gap-4">
+                  <div className="flex items-center rounded-xl border border-zinc-200 bg-zinc-50 p-1">
+                    <button
+                      onClick={() => setQuantidade(Math.max(1, quantidade - 1))}
+                      className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-white transition"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <span className="w-12 text-center font-bold text-zinc-900">{quantidade}</span>
+                    <button
+                      onClick={() => setQuantidade(quantidade + 1)}
+                      className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-white transition"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
+            {/* Botão de Adicionar ao Carrinho */}
             <div className="mt-10 border-t pt-6 space-y-3">
-              <Link
-                href={`/pedir?produto=${encodeURIComponent(produto.nome)}&cor=${encodeURIComponent(corSelecionada)}`}
-                className="block w-full text-center rounded-2xl bg-zinc-900 py-4 font-bold text-white transition hover:bg-zinc-800"
+              <button
+                onClick={handleAdicionarAoCarrinho}
+                className="w-full text-center rounded-2xl bg-zinc-900 py-4 font-bold text-white transition hover:bg-zinc-800"
               >
-                Fazer Pedido ({corSelecionada})
-              </Link>
+                {adicionado ? '✓ Adicionado ao Carrinho!' : `Adicionar ao Carrinho (${quantidade})`}
+              </button>
             </div>
           </div>
 
